@@ -35,7 +35,8 @@ const Login = () => {
     try {
       const userCred = await signInWithEmailAndPassword(auth, email, password);
       const token = await userCred.user.getIdToken();
-      await axios.post("http://localhost:8005/authapi/email/login", { token });
+      const user = await axios.post("http://localhost:8005/authapi/email/login", { token });
+      console.log(user.data.firebaseId,user.data.email)
     } catch (err) {
       console.error("Login Error:", err);
     }
