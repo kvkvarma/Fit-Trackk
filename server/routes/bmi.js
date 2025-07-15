@@ -16,7 +16,7 @@ router.post("/calculate", async (req, res) => {
 
     res.status(200).json({ success: true, bmiData: response.data });
   } catch (err) {
-    console.error("BMI API Error:", err.response?.data || err.message);
+    // console.error("BMI API Error:", err.response?.data || err.message);
     res.status(500).json({ success: false, message: "Error calculating BMI" });
   }
 });
