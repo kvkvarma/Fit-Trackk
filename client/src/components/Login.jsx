@@ -8,14 +8,14 @@ const provider = new GoogleAuthProvider();
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [firebaseId, setFirebaseId] = useState("");
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
       const token = await result.user.getIdToken();
       const res = await axios.post("http://localhost:8005/authapi/google", { token });
-      console.log("Login successful:", res.data.user);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      console.log(res.data.user.firebaseId);
+      // localStorage.setItem("user", JSON.stringify(res.data.user)); 
     } catch (err) {
       console.error("Google login error:", err);
     }
@@ -25,7 +25,8 @@ const Login = () => {
     try {
       const userCred = await createUserWithEmailAndPassword(auth, email, password);
       const token = await userCred.user.getIdToken();
-      await axios.post("http://localhost:8005/authapi/email/register", { token });
+      const user = await axios.post("http://localhost:8005/authapi/email/register", { token });
+      console.log(user.data.firebaseId);
     } catch (err) {
       console.error("Registration Error:", err);
     }
@@ -36,7 +37,8 @@ const Login = () => {
       const userCred = await signInWithEmailAndPassword(auth, email, password);
       const token = await userCred.user.getIdToken();
       const user = await axios.post("http://localhost:8005/authapi/email/login", { token });
-      console.log(user.data.firebaseId,user.data.email)
+      // console.log(user.data.firebaseId,user.data.email);
+      setFirebaseId(user.data.firebaseId);
     } catch (err) {
       console.error("Login Error:", err);
     }

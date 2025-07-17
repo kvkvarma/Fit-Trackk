@@ -3,7 +3,7 @@ const router = express.Router();
 const admin = require("../config/firebaseAdmin");
 const User = require("../models/User");
 const { json } = require("body-parser");
-
+const Goal = require("../models/Goal");
 router.post("/email/register",async(req,res)=>{
   try{
     const {token} = req.body;
@@ -17,8 +17,19 @@ router.post("/email/register",async(req,res)=>{
         name,
         profilePic:"sdlkjfs",
       });
+
+      await Goal.create({
+        firebaseId: uid,
+        calorieTarget: 2000,
+        proteinTarget: 150,
+        carbsTarget: 300,
+        fatsTarget: 70,
+        weightTarget: 70,
+        hydrationTarget: 2.5
+      });
     }
-    res.status(200).json({ success: true, user });
+
+    res.status(200).json({ success: true, user,UID:uid});
   }
   catch(err){
       console.error("Email Register Error with DB: ",err);
@@ -57,6 +68,16 @@ router.post("/google", async (req, res) => {
         email,
         name,
         profilePic: picture,
+      });
+
+      await Goal.create({
+        firebaseId: uid,
+        calorieTarget: 2000,
+        proteinTarget: 150,
+        carbsTarget: 300,
+        fatsTarget: 70,
+        weightTarget: 70,
+        hydrationTarget: 2.5
       });
     }
     res.status(200).json({ success: true, user });
